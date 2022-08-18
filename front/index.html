@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consumer o' RSS!</title>
+    <style>
+      .wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      img {
+        max-width: 100%;
+        aspect-ratio: 2 / 1;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      @media screen and (min-width: 600px) {
+        .wrapper {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      article {
+        background: rgb(236, 236, 236);
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+        margin: 1rem 0 1rem 0;
+        padding: 1rem;
+        box-sizing: border-box;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper"></div>
+    <script>
+      const wrapper = document.querySelector(".wrapper");
+      fetch("http://localhost:3000/")
+        .then((res) => res.json())
+        .then((finalStuff) => finalStuff.forEach(createArticle));
+
+      const createArticle = (article) => {
+        const newArticle = document.createElement("article");
+        const newH2 = createNodeAndContent("h2", article.title);
+        const newP = createNodeAndContent("p", article.content);
+
+        const newImg = document.createElement("img");
+        newImg.src = article.bldlSrc;
+
+        const newLink = createNodeAndContent("a", "Læs mere her ->");
+        newLink.setAttribute("target", "_blank");
+        newLink.href = article.link;
+
+        newArticle.appendChild(newH2);
+        newArticle.appendChild(newP);
+        newArticle.appendChild(newImg);
+        newArticle.appendChild(newLink);
+
+        wrapper.appendChild(newArticle);
+      };
+
+      const createNodeAndContent = (type, content) => {
+        const newElement = document.createElement(type);
+        const nodeContent = document.createTextNode(content);
+        newElement.appendChild(nodeContent);
+        return newElement;
+      };
+    </script>
+  </body>
+</html>
